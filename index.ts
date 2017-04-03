@@ -1,5 +1,6 @@
 import fs = require('fs')
 import _ = require('lodash')
+import { GeneratePushID } from './lib/util'
 
 export module knymbusdb {
 
@@ -7,24 +8,32 @@ export module knymbusdb {
     /**
      * initialize database by creating a connection to file 
      * if file does not exist one will be created 
+     * @example storage = new knymbus.database('storage')
      */
     export class database {
 
-        public dbName: string;
+        /**
+         * Store the name of the Database that we are using for this instance of the class
+         */
+        private dbName: string;
+
+        /**
+         * Store the database in this object so that we can have access to the various nodes 
+         */
         private databaseObj: Object = {};
-        private childfn: any = {
-            call: false,
-            name: ''
-
-        }
 
 
+        /**
+         * When the object is created the user must initialize the object with a database name 
+         * in order for the object to get the database or create a new on if name not found
+         * @param databaseName : String -> name of your database 
+         */
         constructor(databaseName: string) {
             if (_.isString(databaseName) && databaseName.trim().length > 0) {
                 this.dbName = databaseName + '.db'
                 this.createdb();
             }
-            
+
         }
 
         private createdb() {
@@ -37,85 +46,107 @@ export module knymbusdb {
             } catch (error) {
                 return new Error('Invalid Data: ' + doc)
             }
+        }
 
+
+        /**
+         * The function aloow the user to set thier own key and value pair to the database
+         * note that this does not append to key is exist but override given key values
+         * @param key 
+         * @param value 
+         * @param callbak 
+         */
+        set(key: string, value: any) {
+
+            //ensure that the key entered is a string and not null 
+            if (_.isString(key) || typeof key != null) {
+                _.set(this.databaseObj, key, value)
+                this.save()
+            }
+
+        }
+
+        public push(key: string, value: any) {
+
+            if (_.isString(key) && typeof key !== null) {
+                let node: string = key + '.' + _.clone(generateID()).toString();
+                this.set(node,value)
+            } 
             
         }
 
-        set(childNode: string) {
-            //ensure that the value entered is a string and not null
-            if (_.isString(childNode) || typeof childNode != null) {
-
-                //check if child is chained to child and set child bind
-                if (this.childfn.call) {
-                    this.childfn.name = this.childfn.name + '.' + childNode;
-                } else {
-                    this.childfn.call = true
-                    this.childfn.name = childNode
-                }
-                //console.log('child: ', this.childfn.name)
-
-                if (_.has(this.databaseObj, this.childfn.name)) {
-                    // console.log('node found: ', _.get(this.databaseObj, this.childfn.name))
-                } else {
-                    //console.log("node was not found: ", this.databaseObj)
+        /**
+         * Remove a node with all is value from the file
+         * @param key 
+         */
+        public remove(key: string) {
+            if (_.isString(key) && typeof key !== null) {
+                let unset = _.unset(this.databaseObj, key)
+                if (unset) {
+                    this.save()
                 }
 
-
             }
-            return this
         }
 
-        public push(obj: Object) {
 
-            let node: string;
-            let _id = _.clone(generateID());
-            if (this.childfn.call) {
-                node = this.childfn.name + '.' + _id.toString()
-                //console.log('node name: ', node)
-                //console.log(_.has(this.databaseObj,node))
-                _.set(this.databaseObj, node, obj)
 
-            } else {
-                _.set(this.databaseObj, _id, obj)
+        public get(key: string) {
+            if (_.isString(key) && typeof key !== null) {
+                return _.get(this.databaseObj, key)
             }
-            fs.writeFileSync(this.dbName, JSON.stringify(this.databaseObj))
-        }
 
-        public remove() {
-
-        }
-
-        public get() {
-            console.log('child at ref: ',this.childfn.name)
-            return _.get(this.databaseObj, this.childfn.name)
         }
 
         /**
          * This function will set the key and value from the given params
-         * @param nodeName name of the child node
-         * @param data Date to pass to that child
-         * 
-         * @example storage.set('myKeyName',{name:"cars", year:1975,location:"29th & 5th Avenue"})+
-         * @result {
+         * @param key name of the child node
+         * @param value Data to pass to that child
+         *
+         * * @example storage.update('myKeyName.year',1973)
+         * before  
+         * file {
          *     myKeyName:{
          *         name: "cars",
          *         year: 1975,
          *         location: "29th & 5th Avenue"
          *         }
          *     }
+         * After
+         * file {
+         *     myKeyName:{
+         *         name: "cars",
+         *         year: 1973,
+         *         location: "29th & 5th Avenue"
+         *         }
+         *     }
          */
-        public update(nodeName: string, data: Object) {
-            if(_.isString(nodeName) && typeof nodeName !== null){
-
+        public update(key: string, value: any) {
+            if (_.isString(key) && typeof key !== null) {
+                if (_.has(this.databaseObj, key)) {
+                    this.set(key, value)
+                    return true
+                } else {
+                    return false
+                }
             }
 
         }
 
+
+
         /**
          * 
          */
-        query(query:string,callback){
-            
+        private query(query: string, callback) {
+
+        }
+
+        /**
+         * Save the database to the file 
+         */
+        private save(): void {
+            fs.writeFileSync(this.dbName, JSON.stringify(this.databaseObj))
         }
 
 
@@ -127,7 +158,7 @@ export module knymbusdb {
      * generate key for object when .push() is used
      */
     function generateID() {
-        return "_kvp" + _.random(10, 100)
+        return GeneratePushID.pushKey()
     }
 
 

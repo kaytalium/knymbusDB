@@ -6,26 +6,27 @@ import { knymbusdb } from './index'
  */
 let storage = new knymbusdb.database('storage')
 
-var arr = [
-    {name:"John",age:23},
-    {name:"Kevin",age:16},
-    {name:"Susan",age:20},
-    {name:"Mary",age:15},
-]
+var people = {
+    a:{name:"John",age:23},
+    b:{name:"Kevin",age:16},
+    c:{name:"Susan",age:20},
+    d:{name:"Mary",age:15},
+}
 
-/**
- * 
- */
-//let list = storage.child('list').child('cars').push({name:"Ford"})
-let arr1:Array<Object> = [
-    {darkTheme:"solar Eclipse"}
-]
-let list = storage.child('category').child('_kvp62').child('_kvp90').push({item:'_kvp79-says-hello'})
-let myList  = storage.child('category').child('_kvp62')
-console.log('this is from  test ',myList.ref())
-//list.push({activetab:"quickView"})
-//list.child('747.8735122726968').remove()
-//storage.push(arr)
+storage.set('persons',people)
 
+let persons = storage.get('persons')
+console.log('Persons: ',people)
+
+let John = storage.get('persons.a.age')
+console.log('John: ',John)
+
+let up = storage.update('persons.a.age',35)
+console.log("Update: ",up)
+
+let rm = storage.remove('persons.d')
+console.log("remove D: ",rm)
+
+storage.push('active',"1375")
 
 
