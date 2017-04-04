@@ -30,10 +30,10 @@ export module knymbusdb {
          * @param databaseName : String -> name of your database 
          */
         constructor(databaseName: string) {
-            if(databaseName){
+            if (databaseName) {
                 this.createdb(databaseName);
             }
-            
+
         }
 
         private createdb(DBName: string) {
@@ -41,8 +41,8 @@ export module knymbusdb {
                 util.checkStorageLoc();
                 fs.writeFileSync(util.getAppPath(DBName), '{}')
             }
-            var doc = fs.readFileSync(util.getAppPath(DBName), { encoding: 'utf8' })
             try {
+                var doc = fs.readFileSync(util.getAppPath(DBName), { encoding: 'utf8' })
                 this.databaseObj = JSON.parse(doc)
             } catch (error) {
                 return new Error('Invalid Data: ' + doc)
@@ -73,9 +73,9 @@ export module knymbusdb {
 
             if (_.isString(key) && typeof key !== null) {
                 let node: string = key + '.' + _.clone(util.getPushID);
-                this.set(node,value)
-            } 
-            
+                this.set(node, value)
+            }
+
         }
 
         /**
@@ -148,11 +148,11 @@ export module knymbusdb {
         /**
          * Save the database to the file 
          */
-       private  save(): void {
+        private save(): void {
             fs.writeFileSync(util.getAppPath(this.dbName), JSON.stringify(this.databaseObj))
         }
-        
-       
+
+
 
 
     }
