@@ -19,7 +19,7 @@ export declare module knymbusdb {
          * @param databaseName : String -> name of your database
          */
         constructor(databaseName: string);
-        private createdb();
+        private createdb(DBName);
         /**
          * The function aloow the user to set thier own key and value pair to the database
          * note that this does not append to key is exist but override given key values

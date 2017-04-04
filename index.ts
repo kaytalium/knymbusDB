@@ -1,6 +1,6 @@
 import fs = require('fs')
 import _ = require('lodash')
-import { GeneratePushID } from './lib/util'
+import { util } from './lib/util'
 
 export module knymbusdb {
 
@@ -29,23 +29,24 @@ export module knymbusdb {
          * @param databaseName : String -> name of your database 
          */
         constructor(databaseName: string) {
-            if (_.isString(databaseName) && databaseName.trim().length > 0) {
-                this.dbName = databaseName + '.db'
-                this.createdb();
+            if(databaseName){
+                this.createdb(databaseName);
             }
-
+            
         }
 
-        private createdb() {
-            if (!fs.existsSync(this.dbName)) {
-                fs.writeFileSync(this.dbName, '{}')
+        private createdb(DBName: string) {
+            if (!fs.existsSync(util.getAppPath(DBName))) {
+                fs.writeFileSync(util.getAppPath(DBName), '{}')
             }
-            var doc = fs.readFileSync(this.dbName, { encoding: 'utf8' })
+            var doc = fs.readFileSync(util.getAppPath(DBName), { encoding: 'utf8' })
             try {
                 this.databaseObj = JSON.parse(doc)
             } catch (error) {
                 return new Error('Invalid Data: ' + doc)
             }
+
+            this.dbName = DBName;
         }
 
 
@@ -69,7 +70,7 @@ export module knymbusdb {
         public push(key: string, value: any) {
 
             if (_.isString(key) && typeof key !== null) {
-                let node: string = key + '.' + _.clone(generateID()).toString();
+                let node: string = key + '.' + _.clone(util.getPushID);
                 this.set(node,value)
             } 
             
@@ -145,21 +146,13 @@ export module knymbusdb {
         /**
          * Save the database to the file 
          */
-        private save(): void {
-            fs.writeFileSync(this.dbName, JSON.stringify(this.databaseObj))
+       private  save(): void {
+            fs.writeFileSync(util.getAppPath(this.dbName), JSON.stringify(this.databaseObj))
         }
 
 
 
 
     }
-
-    /**
-     * generate key for object when .push() is used
-     */
-    function generateID() {
-        return GeneratePushID.pushKey()
-    }
-
 
 }//end of module
