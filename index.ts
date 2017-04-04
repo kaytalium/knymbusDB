@@ -2,6 +2,7 @@ import fs = require('fs')
 import _ = require('lodash')
 import { util } from './lib/util'
 
+
 export module knymbusdb {
 
 
@@ -37,6 +38,7 @@ export module knymbusdb {
 
         private createdb(DBName: string) {
             if (!fs.existsSync(util.getAppPath(DBName))) {
+                util.checkStorageLoc();
                 fs.writeFileSync(util.getAppPath(DBName), '{}')
             }
             var doc = fs.readFileSync(util.getAppPath(DBName), { encoding: 'utf8' })
@@ -149,8 +151,8 @@ export module knymbusdb {
        private  save(): void {
             fs.writeFileSync(util.getAppPath(this.dbName), JSON.stringify(this.databaseObj))
         }
-
-
+        
+       
 
 
     }
