@@ -53,12 +53,4 @@ describe('var db = new knymbusDB.database("filename")', function () {
     })
   })
 
-
-  describe('util.getAppPath()', function () {
-    it('should return an Error', function (done) {
-         m.chai.expect(util.getAppPath(' ')).to.be.an.instanceof(Error)
-      done()
-    })
-  })
-
 })
