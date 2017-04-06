@@ -4,7 +4,7 @@
   "description": "A local json file system Database with reactive features",
   "main": "index.js",
   "scripts": {
-    "start": "node test.js"
+    "test": "node test.js"
   },
   "author": "Ovel Heslop <kayheslop@gmail.com>",
   "license": "MIT",
