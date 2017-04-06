@@ -1,6 +1,7 @@
 language: node_js
 node_js:
   - "7.0"
+  sudo: false
  addons:
   apt:
     packages:
@@ -11,3 +12,5 @@ install:
   - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
  notifications:
    email: false
+script:
+- npm test
