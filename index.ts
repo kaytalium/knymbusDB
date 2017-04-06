@@ -7,36 +7,20 @@ export module knymbusdb {
 
 
     /**
-     * initialize database by creating a connection to file 
-     * if file does not exist one will be created 
-     * @example storage = new knymbus.database('storage')
-     */
-    export class database {
-
-        /**
-         * Store the name of the Database that we are using for this instance of the class
-         */
-        private dbName: string;
-
-        /**
-         * Store the database in this object so that we can have access to the various nodes 
-         */
-        private databaseObj: Object = {};
-
-
-        /**
          * When the object is created the user must initialize the object with a database name 
          * in order for the object to get the database or create a new on if name not found
          * @param databaseName : String -> name of your database 
          */
-        constructor(databaseName: string) {
+        function initializeDB(databaseName: string) {
             if (databaseName) {
-                this.createdb(databaseName);
+                createdb(databaseName);
             }
 
         }
 
-        private createdb(DBName: string) {
+
+        
+        function createdb(DBName: string) {
             if (!fs.existsSync(util.getAppPath(DBName))) {
                 util.checkStorageLoc(function(){
                     fs.writeFileSync(util.getAppPath(DBName), '{}')
@@ -52,6 +36,28 @@ export module knymbusdb {
 
             this.dbName = DBName;
         }
+
+
+    /**
+     * initialize database by creating a connection to file 
+     * if file does not exist one will be created 
+     * @example storage = new knymbus.database('storage')
+     */
+    export namespace database {
+
+        /**
+         * Store the name of the Database that we are using for this instance of the class
+         */
+        let databaseFilename: string;
+
+        /**
+         * Store the database in this object so that we can have access to the various nodes 
+         */
+        let databaseObj: Object = {};
+
+
+        
+
 
 
         /**
