@@ -39,10 +39,10 @@ export module util {
    * This module store all its files in the knymbusDB folder under user AppData apps 
    * as such we must ensure that the folder exist at the location if not system will throw anb error
    */
-  export function checkStorageLoc() {
+ export function checkStorageLoc(callback: Function) {
     mkdirp(dataStorageLoc,function(err){
       if(err) console.log(err)
-      else console.log('Folder created successfully')
+      else callback()
     })
   }
 }

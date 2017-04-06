@@ -38,8 +38,10 @@ export module knymbusdb {
 
         private createdb(DBName: string) {
             if (!fs.existsSync(util.getAppPath(DBName))) {
-                util.checkStorageLoc();
-                fs.writeFileSync(util.getAppPath(DBName), '{}')
+                util.checkStorageLoc(function(){
+                    fs.writeFileSync(util.getAppPath(DBName), '{}')
+                })
+                
             }
             try {
                 var doc = fs.readFileSync(util.getAppPath(DBName), { encoding: 'utf8' })
@@ -94,7 +96,7 @@ export module knymbusdb {
 
 
 
-        public get(key: string) {
+        public get(key: string):object | string | any {
             if (_.isString(key) && typeof key !== null) {
                 return _.get(this.databaseObj, key)
             }
