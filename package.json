@@ -4,16 +4,22 @@
   "description": "A local json file system Database with reactive features",
   "main": "index.js",
   "scripts": {
-    "test": "node test.js"
+    "start": "node test.js",
+    "test": "electron-mocha --recursive tests -R spec && electron-mocha --renderer --recursive tests -R spec"
   },
   "author": "Ovel Heslop <kayheslop@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^7.0.12"
+    "@types/mocha": "^2.2.40",
+    "@types/node": "^7.0.12",
+    "electron-mocha": "^3.4.0",
+    "mochainon": "^1.0.0"
   },
   "dependencies": {
     "@types/lodash": "^4.14.61",
+    "async": "^2.3.0",
     "lodash": "^4.17.4",
-    "mkdirp": "^0.5.1"
+    "mkdirp": "^0.5.1",
+    "rimraf": "^2.6.1"
   }
 }

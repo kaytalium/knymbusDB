@@ -62,7 +62,9 @@ export module knymbusdb {
          * @param callbak 
          */
         set(key: string, value: any) {
-
+            if(!key){
+                throw new Error('missing key')
+            }
             //ensure that the key entered is a string and not null 
             if (_.isString(key) || typeof key != null) {
                 _.set(this.databaseObj, key, value)
@@ -97,6 +99,10 @@ export module knymbusdb {
 
 
         public get(key: string):object | string | any {
+            if(!key){
+                return new Error('missing key')
+            }
+
             if (_.isString(key) && typeof key !== null) {
                 return _.get(this.databaseObj, key)
             }
