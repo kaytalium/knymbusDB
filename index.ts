@@ -103,8 +103,14 @@ export module knymbusdb {
                 return new Error('missing key')
             }
 
+            if(_.isString(key) && key.trim().length === 0){
+                return new Error('invalid Key')
+            }
+
             if (_.isString(key) && typeof key !== null) {
                 return _.get(this.databaseObj, key)
+            }else{
+                return null;
             }
 
         }
@@ -157,7 +163,20 @@ export module knymbusdb {
          * Save the database to the file 
          */
         private save(): void {
-            fs.writeFileSync(util.getAppPath(this.dbName), JSON.stringify(this.databaseObj))
+            
+            if(!this.dbName){
+                throw new Error('file name not found')
+            }
+            
+            if(_.isString(this.dbName) && this.dbName.trim().length === 0){
+                throw new Error('Invalid file name')
+            }
+
+            if(_.isString(this.dbName) && this.dbName.trim().length > 0){
+                fs.writeFileSync(util.getAppPath(this.dbName), JSON.stringify(this.databaseObj))
+            }
+
+            
         }
 
 

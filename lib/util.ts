@@ -19,13 +19,15 @@ export module util {
    * path to the user AppData at this location we will create a folder call knymbusDB where all our 
    * will be stored
    */
-  export function getAppPath(dbFileName: string) {
+  export function getAppPath(dbFileName: string):string {
     if (!dbFileName) {
-      throw new Error('No name was given')
+      return 'No name was given'
+      
     }
 
     if (!_.isString(dbFileName) || dbFileName.trim().length === 0) {
-      throw new Error('Invalid name')
+      return 'Invalid name'
+      
     }
 
     let fileName = path.basename(dbFileName, path.extname(dbFileName)) + '.db'
