@@ -1,8 +1,8 @@
 import { knymbusdb } from './index'
 /**
- * get the database we want to use from module
+ * Get the database we want to use from module
  * this opens a connection to the database that allow for 
- * queries the document
+ * quering the document
  */
 let storage = new knymbusdb.database('storage')
 
